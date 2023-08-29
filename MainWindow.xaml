@@ -11,7 +11,7 @@
         MouseDown="Window_MouseDown"
         >
     <Grid Margin="10,10,10,10" Height="564" VerticalAlignment="Top">
-        <!-- Main Grid (Side and Main Panel) -->
+ <!-- Main Grid (Side Panel and Main Panel) -->
         <Grid.RowDefinitions>
             <RowDefinition Height="225" />
             <RowDefinition />
@@ -29,7 +29,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <!--Debug-->
-            <TextBox Name="txtDebug" Grid.Row="0" Grid.Column="0" IsReadOnly="True" TextWrapping="Wrap"/>
+            <TextBlock FontSize="24" TextAlignment="Center" Name="txtDebug" Grid.Row="0" Grid.Column="0" TextWrapping="Wrap"/>
             <!-- Control -->
             <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.RowDefinitions>
@@ -49,7 +49,7 @@
                 <Button x:Name="SendToRender" Grid.Row="1" Grid.Column="0" Content="Send To Render" FontWeight="Bold" Click="senButton_Click"/>
             </Grid>
         </Grid>
-<!-- Side Panel -->
+        <!-- Side Panel -->
         <!-- Simple/Advanced Buttons -->
         <Grid Grid.Row="0" Grid.Column="0">
             <Grid.RowDefinitions>
@@ -68,6 +68,42 @@
             </Grid.RowDefinitions>
 
             <Button x:Name="Settings" Grid.Row="1" Grid.Column="0" Content="Settings" FontWeight="Bold" Click="setButton_Click"/>
+        </Grid>
+        <!-- Input -->
+        <Grid Grid.Row="1" Grid.Column="1">
+            <StackPanel Margin="10">
+                <Label FontWeight="Bold" FontSize="24">SUVAT Options</Label>
+                <CheckBox Checked="SCheckedY" Unchecked="SCheckN" Name="Distance">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                    Distance
+                </CheckBox>
+                <CheckBox Checked="UCheckedY" Unchecked="UCheckN" Name="InitialVelocity">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                    Initial Velocity
+                </CheckBox>
+                <CheckBox Checked="VCheckedY" Unchecked="VCheckN" Name="FinalVelocity">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                    Final Velocity
+                </CheckBox>
+                <CheckBox Checked="ACheckedY" Unchecked="ACheckN" Name="Acceleration">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                    Acceleration
+                </CheckBox>
+                <CheckBox Checked="TCheckedY" Unchecked="TCheckN" Name="Time">
+                    <CheckBox.LayoutTransform>
+                        <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                    </CheckBox.LayoutTransform>
+                    Time
+                </CheckBox>
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

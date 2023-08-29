@@ -30,8 +30,6 @@ namespace test_2
 
             this.SizeToContent = SizeToContent.Height;
 
-            txtDebug.Text = "DEBUG";
-
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -70,6 +68,54 @@ namespace test_2
         private void senButton_Click(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
+        }
+
+        private void SCheckedY(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Inlines.Add(new Run("Distance\n"));
+        }
+
+        private void SCheckN(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Text = null;
+        }
+
+        private void UCheckedY(object sender, RoutedEventArgs e)
+        {
+            //txtDebug.Text = "Initial Velocity";
+            txtDebug.Inlines.Add(new Run("Initial Velocity\n"));
+        }
+
+        private void UCheckN(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Text = null;
+        }
+        private void VCheckedY(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Inlines.Add(new Run("Final Velocity\n"));
+        }
+
+        private void VCheckN(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Text = null;
+        }
+        private void ACheckedY(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Inlines.Add(new Run("Acceleration\n"));
+        }
+
+        private void ACheckN(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Text = null;
+        }
+        private void TCheckedY(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Inlines.Add(new Run("Time\n"));
+        }
+
+        private void TCheckN(object sender, RoutedEventArgs e)
+        {
+            txtDebug.Text = null;
         }
     }
 }
