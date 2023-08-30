@@ -9,6 +9,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
+        PreviewKeyDown="Window_PreviewKeyDown"
         >
     <Grid Margin="10,10,10,10" Height="564" VerticalAlignment="Top">
  <!-- Main Grid (Side Panel and Main Panel) -->
@@ -66,7 +67,7 @@
                 <RowDefinition Height="275" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-
+            <Button x:Name="Fahim" Grid.Row="0" Grid.Column="0" Content="Fahim Pics" FontWeight="Bold" Click="fahButton_Click" Visibility="Hidden"/>
             <Button x:Name="Settings" Grid.Row="1" Grid.Column="0" Content="Settings" FontWeight="Bold" Click="setButton_Click"/>
         </Grid>
         <!-- Input -->

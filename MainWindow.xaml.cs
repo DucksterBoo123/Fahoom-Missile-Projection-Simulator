@@ -32,6 +32,14 @@ namespace test_2
 
         }
 
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                Fahim.Visibility = System.Windows.Visibility.Visible;
+                e.Handled = true;
+            }
+        }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -116,6 +124,11 @@ namespace test_2
         private void TCheckN(object sender, RoutedEventArgs e)
         {
             txtDebug.Text = null;
+        }
+
+        private void fahButton_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
     }
 }
