@@ -105,6 +105,14 @@
                     Time
                 </CheckBox>
             </StackPanel>
+            <Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="175"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
