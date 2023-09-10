@@ -16,28 +16,13 @@ using System.Windows.Shapes;
 namespace test_2
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for FahimPics.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class FahimPics : Page
     {
-
-        public MainWindow()
+        public FahimPics()
         {
             InitializeComponent();
-
-
-            Icon = new BitmapImage(new Uri("./Images/logo.png", UriKind.Relative));
-
-            this.SizeToContent = SizeToContent.Height;
-
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                DragMove();
-            }
         }
     }
 }

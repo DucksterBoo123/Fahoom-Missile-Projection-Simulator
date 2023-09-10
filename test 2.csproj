@@ -8,4 +8,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="fahim.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="fahim.png" />
+  </ItemGroup>
+
 </Project>

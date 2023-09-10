@@ -7,7 +7,33 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="AdvancedPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="FahimPics.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Settings.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SimplePage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="FahimPics.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="AdvancedPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Settings.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SimplePage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
