@@ -116,6 +116,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Button x:Name="ResetVar" Grid.Row="0" Content="Reset All Variables" FontWeight="Bold" Click="revarButton_Click"/>
+                <Button x:Name="Calc" Grid.Row="1" Content="Calculate" FontWeight="Bold" Click="calcButton_Click"/>
             </Grid>
             <TextBox x:Name="DistanceTextBox" Margin="10,50,350,265" Visibility="Hidden" PreviewTextInput="NumberValidationTextBox"/>
             <TextBox x:Name="InitialVelocityTextBox" Margin="10,74,350,241" Visibility="Hidden" PreviewTextInput="NumberValidationTextBox"/>
@@ -123,5 +124,10 @@
             <TextBox x:Name="AccelerationTextBox" Margin="10,122,350,193" Visibility="Hidden" PreviewTextInput="NumberValidationTextBox"/>
             <TextBox x:Name="TimeTextBox" Margin="10,146,350,169" Visibility="Hidden" PreviewTextInput="NumberValidationTextBox"/>
         </Grid>
+        <Popup x:Name="noinputPopup" Width="150" Height="25" HorizontalAlignment="Center">
+            <TextBlock Background="White">
+                hello
+            </TextBlock>
+        </Popup>
     </Grid>
 </Page>

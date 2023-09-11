@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -77,9 +78,9 @@ namespace test_2
 
         private void SCheckedY(object sender, RoutedEventArgs e)
         {
-            string DistVal;
-            DistVal = DistanceTextBox.Text;
-            txtDebug.Inlines.Add(new Run("Distance\n" + DistVal));
+            //string DistVal; PoC
+            //DistVal = DistanceTextBox.Text; PoC
+            txtDebug.Inlines.Add(new Run("Distance\n")); //+ DistVal)); PoC
             Distance.Visibility = System.Windows.Visibility.Hidden;
             DistanceTextBox.Visibility = System.Windows.Visibility.Visible;
         }
@@ -139,6 +140,11 @@ namespace test_2
         {
             FahimPics page = new FahimPics();
             this.NavigationService.Navigate(page);
+        }
+        private void calcButton_Click(object sender, RoutedEventArgs e)
+        {
+            noinputPopup.IsOpen = true;
+
         }
         private void revarButton_Click(object sender, RoutedEventArgs e)
         {
