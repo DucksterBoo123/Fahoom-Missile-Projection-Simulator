@@ -1,4 +1,4 @@
-# Fahoom-Missile-Projection-Simulator
+# Fahoom-Projectile-Motion-Simulator
 
 My Current Computer Science NEA
 
