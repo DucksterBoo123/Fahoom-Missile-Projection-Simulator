@@ -21,40 +21,50 @@ namespace IMGUITEST
         const int hideConsole = 0;
         const int showConsole = 1;
 
-        string hello = "hello";
+        string homePage = "";
+        string fahoomPath = "fahoom.jpg";
 
-        float textR = 1.0f;
-        float textG = 1.0f;
-        float textB = 1.0f;
-        float textA = 1.0f;
-        float buttonR = 1.0f;
-        float buttonG = 1.0f;
-        float buttonB = 1.0f;
-        float buttonA = 0.5f;
         float suvatSInput;
         float suvatUInput;
         float suvatVInput;
         float suvatAInput;
         float suvatTInput;
+        float dragUInput;
+        float dragAInput;
+        float dragMInput;
+        float dragDInput;
 
-        bool test = true;
+        bool home = true;
         bool simple = false;
         bool advanced = false;
         bool settings = false;
         bool fahoom = false;
         bool about = false;
+        bool srgb = true;
+        bool fahoomBool = false;
 
         bool HCM = false;
         bool FM = false;
 
-        int sl;
-        int sl_min = 0;
-        int sl_max = 10;
         int windowxsize = 500;
         int windowysize = 250;
+        int homeCounter = 0;
+        int pageCounter = 0;
+        int spaceCounter = 0; 
+
+        uint fahoomWidth;
+        uint fahoomHeight;
+
+        IntPtr fahoomImage;
+
+        Vector4 col = new Vector4(1f, 1f, 1f, 1f);
+        Vector4 hcm = new Vector4(1f, 0f, 0f, 1f);
+        Vector4 regButton = new Vector4(1f, 1f, 1f, 0.5f);
+        Vector4 hcmButton = new Vector4(1f, 1f, 0f, 1f);
 
         // array setup
         public float[]? suvats {  get; set; }
+        public float[]? drag { get; set; }
 
         // update function
         protected override void Render()
@@ -62,15 +72,25 @@ namespace IMGUITEST
             // styling
             ImGuiStylePtr style = ImGui.GetStyle();
             style.WindowBorderSize = 2.0f;
-            style.Colors[(int)ImGuiCol.Border] = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            style.Colors[(int)ImGuiCol.Border] = col;
             style.Colors[(int)ImGuiCol.TitleBgActive] = new Vector4(0.0f, 0.0f, 0.0f, 1.0f);
             style.Colors[(int)ImGuiCol.ButtonHovered] = new Vector4(1.0f, 1.0f, 1.0f, 0.0f);
             style.Colors[(int)ImGuiCol.ButtonActive] = new Vector4(1.0f, 1.0f, 1.0f, 0.45f);
-            style.Colors[(int)ImGuiCol.Button] = new Vector4(buttonR, buttonG, buttonB, buttonA);
-            style.Colors[(int)ImGuiCol.Text] = new Vector4(textR, textG, textB, textA);
-            // instancing window (with flags that instance a menu bar | disables the collapse window feature | disables the docking feature)
-
+            style.Colors[(int)ImGuiCol.Button] = regButton;
+            // style selection 
+            if (HCM == true)
+            {
+                style.Colors[(int)ImGuiCol.Text] = hcm;
+                style.Colors[(int)ImGuiCol.Button] = hcmButton;
+            }
+            else if (HCM == false) 
+            {
+                style.Colors[(int)ImGuiCol.Text] = col;
+                style.Colors[(int)ImGuiCol.Button] = regButton;
+            }
             
+            
+            // instancing window (with flags that instance a menu bar | disables the collapse window feature | disables the docking feature)
             ImGui.Begin("Fahoom Projectile Motion Simulator", ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoResize);
             ImGui.SetWindowSize(new Vector2(windowxsize, windowysize));
             // menu bar
@@ -83,7 +103,7 @@ namespace IMGUITEST
                     {
                         about = true;
                         settings = false;
-                        test = false;
+                        home = false;
                         simple = false;
                         advanced = false;
                         fahoom = false;
@@ -92,7 +112,7 @@ namespace IMGUITEST
                     {
                         about = false;
                         settings = true;
-                        test = false;
+                        home = false;
                         simple = false;
                         advanced = false;
                         fahoom = false;
@@ -102,7 +122,7 @@ namespace IMGUITEST
                         if (ImGui.MenuItem("Fahoom Mode"))
                         {
                             about = false;
-                            test = false;
+                            home = false;
                             simple = false;
                             advanced = false;
                             settings = false;
@@ -119,19 +139,10 @@ namespace IMGUITEST
                 // app mode
                 if (ImGui.BeginMenu("Mode"))
                 {
-                    if (ImGui.MenuItem("Test"))
-                    {
-                        about = false;
-                        test = true;
-                        simple = false;
-                        advanced = false;
-                        settings = false;
-                        fahoom = false;
-                    }
                     if (ImGui.MenuItem("Simple"))
                     {
                         about = false;
-                        test = false;
+                        home = false;
                         simple = true;
                         advanced = false;
                         settings = false;
@@ -140,7 +151,7 @@ namespace IMGUITEST
                     if (ImGui.MenuItem("Advanced"))
                     {
                         about = false;
-                        test = false;
+                        home = false;
                         simple = false;
                         advanced = true;
                         settings = false;
@@ -152,16 +163,67 @@ namespace IMGUITEST
             }
             // page selector
             // test page
-            if (test == true)
+            if (home == true)
             {
-                ImGui.Text(hello);
-                if (ImGui.Button("Simple", new System.Numerics.Vector2(100, 50)))
+                ImGui.Text("Home Page");
+                ImGui.NewLine();
+                ImGui.NewLine();
+                ImGui.NewLine();
+                ImGui.NewLine();
+
+                ImGui.Text(homePage);
+                ImGui.NewLine();
+
+                Vector2 windowSize = ImGui.GetWindowSize();
+
+                ImGui.BeginChild("home", new System.Numerics.Vector2(windowSize.X - 400, 0));
+                if (ImGui.Button("Home", new System.Numerics.Vector2(100, 50)))
                 {
-                    hello = "Simple";
+                    homePage = homePage + "Home";
+                    homeCounter = homeCounter + 1;
                 }
-                if (ImGui.Button("Advanced", new System.Numerics.Vector2(100, 50)))
+                ImGui.Text(homeCounter.ToString());
+                ImGui.EndChild();
+
+                ImGui.SameLine();
+
+                ImGui.BeginChild("page", new System.Numerics.Vector2(windowSize.X - 400, 0));
+                if (ImGui.Button("Page", new System.Numerics.Vector2(100, 50)))
                 {
-                    hello = "Advanced";
+                    homePage = homePage + "Page";
+                    pageCounter = pageCounter + 1;
+                }
+                ImGui.Text(pageCounter.ToString());
+                ImGui.EndChild();
+
+                ImGui.SameLine();
+
+                ImGui.BeginChild("space", new System.Numerics.Vector2(windowSize.X - 400, 0));
+                if (ImGui.Button("Space", new System.Numerics.Vector2(100, 50)))
+                {
+                    homePage = homePage + " ";
+                    spaceCounter = spaceCounter + 1;
+                }
+                ImGui.Text(spaceCounter.ToString());
+                ImGui.EndChild();
+                ImGui.SameLine();
+                if (ImGui.Button("Reset", new System.Numerics.Vector2(100, 50)))
+                {
+                    homePage = "";
+                    homeCounter = 0;
+                    pageCounter = 0;
+                    spaceCounter = 0;
+                }
+
+                if (homePage == "HomePagePage Page")
+                {
+                    about = false;
+                    home = false;
+                    simple = false;
+                    advanced = false;
+                    settings = false;
+                    fahoom = true;
+                    fahoomBool = true;
                 }
             }
             // simple page
@@ -219,7 +281,7 @@ namespace IMGUITEST
                 if (ImGui.Button("Send To Render")) 
                 {
                     string fileName = "suvatProperties.json";
-                    string jsonString = JsonSerializer.Serialize(windowSize.Y);
+                    string jsonString = JsonSerializer.Serialize(suvats);
                     File.WriteAllText(fileName, jsonString);
 
                     // launch next application
@@ -230,7 +292,55 @@ namespace IMGUITEST
             // advanced page
             if (advanced == true)
             {
-                ImGui.SliderInt("slider", ref sl, sl_min, sl_max);
+                ImGui.Text("Advanced Mode");
+
+                Vector2 windowSize = ImGui.GetWindowSize();
+
+                ImGui.BeginChild("1", new System.Numerics.Vector2(windowSize.X - 175, 0));
+
+                ImGui.NewLine();
+                ImGui.PushItemWidth(150);
+                ImGui.InputFloat("(U) Initial Velocity", ref dragUInput, 1);
+                ImGui.PushItemWidth(150);
+                ImGui.InputFloat("(A) Initial Angle", ref dragAInput, 1);
+                ImGui.PushItemWidth(150);
+                ImGui.InputFloat("(M) Mass", ref dragMInput, 1);
+                ImGui.PushItemWidth(150);
+                ImGui.InputFloat("(D) Diameter", ref dragDInput, 1);
+                if (dragMInput < 0)
+                {
+                    dragMInput = 0;
+                }
+                
+                if (dragAInput < 0)
+                {
+                        dragAInput = 0;
+                }
+
+                ImGui.EndChild();
+
+                ImGui.SameLine();
+
+                ImGui.BeginChild("2");
+                ImGui.NewLine();
+                ImGui.Text("Initial Velocity - " + dragUInput.ToString());
+                ImGui.Text("Initial Angle - " + suvatAInput.ToString());
+                ImGui.Text("Mass - " + dragMInput.ToString());
+                ImGui.Text("Diameter - " + dragDInput.ToString());
+
+                drag = new[] { dragUInput, dragAInput, dragMInput, dragDInput};
+
+                if (ImGui.Button("Send To Render"))
+                {
+                    string fileName = "dragProperties.json";
+                    string jsonString = JsonSerializer.Serialize(drag);
+                    File.WriteAllText(fileName, jsonString);
+
+                    // launch next application
+                }
+
+                ImGui.EndChild();
+
             }
             // about page
             if (about == true)
@@ -244,47 +354,53 @@ namespace IMGUITEST
                 ImGui.Text("License: MIT");
             }
             // settings page
-            if (settings == true) 
+            if (settings == true)
             {
+                Vector2 windowSize = ImGui.GetWindowSize();
+
+                ImGui.BeginChild("1", new System.Numerics.Vector2(windowSize.X - 250, 0));
+                // options
+                ImGui.SeparatorText("Options");
                 ImGui.Checkbox("High Contrast Mode", ref HCM);
                 ImGui.Checkbox("Fahoom Mode", ref FM);
+                ImGui.SeparatorText("Sizing");
+                ImGui.PushItemWidth(175);
                 ImGui.SliderInt("WindowX", ref windowxsize, 500, 1000);
                 ImGui.SliderInt("WindowY", ref windowysize, 150, 1000);
+                // window sizing
                 if (ImGui.Button("Reset Window Size"))
                 {
                     windowxsize = 500;
                     windowysize = 250;
                 }
-            }
-            if (HCM == true)
-            {
-                if (textG == 1.0f)
-                {
-                    textG = 0.0f;
-                    textB = 0.0f;
 
-                    buttonB = 0.0f;
-                    buttonA = 1.0f;
-                }
-            }
-            if (HCM == false)
-            {
-                if (textG == 0.0f)
-                {
-                    textG = 1.0f;
-                    textB = 1.0f;
+                ImGui.EndChild();
 
-                    buttonB = 1.0f;
-                    buttonA = 0.5f;
-                }
+                ImGui.SameLine();
+
+                ImGui.BeginChild("2");
+                // colour picker
+                ImGui.ColorPicker4("App Colour", ref col);
+                ImGui.EndChild();
             }
-            // FAHOOM PAGE
-            if (fahoom == true) 
+                // FAHOOM PAGE
+            if (fahoom == true)
             {
-                ImGui.Text("fahooooom");
-                ImGui.Image(64, new System.Numerics.Vector2(300, 100));
+                ImGui.Checkbox("Fahoom Pics", ref fahoomBool);
+                if (fahoomBool == true)
+                {
+                    windowxsize = 1000;
+                    windowysize = 1000;
+                    AddOrGetImagePointer(fahoomPath, srgb, out fahoomImage, out fahoomWidth, out fahoomHeight);
+                    ImGui.Image(fahoomImage, new Vector2(1000, 1000));
+                }
+                if (fahoomBool == false)
+                {
+                    windowxsize = 500;
+                    windowysize = 250;
+                }
+              ImGui.End();
             }
-            ImGui.End();
         }
 
         public static void Main(string[] args)
