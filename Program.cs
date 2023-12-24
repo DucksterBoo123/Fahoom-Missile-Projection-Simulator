@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using ClickableTransparentOverlay.Win32;
 using SharpDX.DXGI;
 using System.Text.Json;
+using SharpDX.Direct3D11;
 
 namespace IMGUITEST
 {
@@ -69,6 +70,69 @@ namespace IMGUITEST
         // update function
         protected override void Render()
         {
+            void page(string page)
+            {
+                if (page == "about")
+                {
+                    about = true;
+                    settings = false;
+                    home = false;
+                    simple = false;
+                    advanced = false;
+                    fahoom = false;
+                }
+
+                if (page == "settings")
+                {
+                    about = false;
+                    settings = true;
+                    home = false;
+                    simple = false;
+                    advanced = false;
+                    fahoom = false;
+                }
+                
+                if (page == "home")
+                {
+                    about = false;
+                    settings = false;
+                    home = true;
+                    simple = false;
+                    advanced = false;
+                    fahoom = false;
+                }
+
+                if (page == "simple")
+                {
+                    about = false;
+                    settings = false;
+                    home = false;
+                    simple = true;
+                    advanced = false;
+                    fahoom = false;
+                }
+
+                if (page == "advanced")
+                {
+                    about = false;
+                    settings = false;
+                    home = false;
+                    simple = false;
+                    advanced = true;
+                    fahoom = false;
+                }
+
+                if (page == "fahoom")
+                {
+                    about = false;
+                    settings = false;
+                    home = false;
+                    simple = false;
+                    advanced = false;
+                    fahoom = true;
+                }
+            }
+            
             // styling
             ImGuiStylePtr style = ImGui.GetStyle();
             style.WindowBorderSize = 2.0f;
@@ -101,32 +165,17 @@ namespace IMGUITEST
                 {
                     if (ImGui.MenuItem("About"))
                     {
-                        about = true;
-                        settings = false;
-                        home = false;
-                        simple = false;
-                        advanced = false;
-                        fahoom = false;
+                        page("about");                        
                     }
                     if (ImGui.MenuItem("Settings"))
                     {
-                        about = false;
-                        settings = true;
-                        home = false;
-                        simple = false;
-                        advanced = false;
-                        fahoom = false;
+                        page("settings");
                     }
                     if (FM == true)
                     {
                         if (ImGui.MenuItem("Fahoom Mode"))
                         {
-                            about = false;
-                            home = false;
-                            simple = false;
-                            advanced = false;
-                            settings = false;
-                            fahoom = true;
+                            page("fahoom");
                         }
                     }
                     if (ImGui.MenuItem("Exit"))
@@ -141,21 +190,20 @@ namespace IMGUITEST
                 {
                     if (ImGui.MenuItem("Simple"))
                     {
-                        about = false;
-                        home = false;
-                        simple = true;
-                        advanced = false;
-                        settings = false;
-                        fahoom = false;
+                        page("simple");
                     }
                     if (ImGui.MenuItem("Advanced"))
                     {
-                        about = false;
-                        home = false;
-                        simple = false;
-                        advanced = true;
-                        settings = false;
-                        fahoom = false;
+                        page("advanced");
+                    }
+                    ImGui.EndMenu();
+                }
+                //development menu
+                if (ImGui.BeginMenu("Debug"))
+                {
+                    if (ImGui.MenuItem("Home"))
+                    {
+                        page("home");
                     }
                     ImGui.EndMenu();
                 }
@@ -217,12 +265,7 @@ namespace IMGUITEST
 
                 if (homePage == "HomePagePage Page")
                 {
-                    about = false;
-                    home = false;
-                    simple = false;
-                    advanced = false;
-                    settings = false;
-                    fahoom = true;
+                    page("fahoom");
                     fahoomBool = true;
                 }
             }
@@ -250,6 +293,14 @@ namespace IMGUITEST
                 ImGui.InputFloat("(A) Acceleration", ref suvatAInput, 1);
                 ImGui.PushItemWidth(150);
                 ImGui.InputFloat("(T) Time", ref suvatTInput, 1);
+                if(ImGui.Button("Reset"))
+                {
+                    suvatSInput = 0f;
+                    suvatUInput = 0f;
+                    suvatVInput = 0f;
+                    suvatAInput = 0f;
+                    suvatTInput = 0f;
+                }
                 
                 // sets negative values for time to 0 (as time is scalar and cannot be negative)
                 if (suvatTInput < 0)
@@ -275,7 +326,7 @@ namespace IMGUITEST
                 ImGui.Text("Time - " + suvatTInput.ToString());
 
                 // array storing suvat variables
-                suvats = new[] { suvatSInput, suvatUInput, suvatVInput, suvatAInput, suvatTInput };
+                suvats = new[] {suvatSInput, suvatUInput, suvatVInput, suvatAInput, suvatTInput};
 
                 // serializes array data to json file
                 if (ImGui.Button("Send To Render")) 
@@ -307,6 +358,13 @@ namespace IMGUITEST
                 ImGui.InputFloat("(M) Mass", ref dragMInput, 1);
                 ImGui.PushItemWidth(150);
                 ImGui.InputFloat("(D) Diameter", ref dragDInput, 1);
+                if (ImGui.Button("Reset"))
+                {
+                    dragUInput = 0f;
+                    dragAInput = 0f;
+                    dragMInput = 0f;
+                    dragDInput = 0f;
+                }
                 if (dragMInput < 0)
                 {
                     dragMInput = 0;
@@ -324,11 +382,11 @@ namespace IMGUITEST
                 ImGui.BeginChild("2");
                 ImGui.NewLine();
                 ImGui.Text("Initial Velocity - " + dragUInput.ToString());
-                ImGui.Text("Initial Angle - " + suvatAInput.ToString());
+                ImGui.Text("Initial Angle - " + dragAInput.ToString());
                 ImGui.Text("Mass - " + dragMInput.ToString());
                 ImGui.Text("Diameter - " + dragDInput.ToString());
 
-                drag = new[] { dragUInput, dragAInput, dragMInput, dragDInput};
+                drag = new[] {dragUInput, dragAInput, dragMInput, dragDInput};
 
                 if (ImGui.Button("Send To Render"))
                 {
@@ -358,11 +416,16 @@ namespace IMGUITEST
             {
                 Vector2 windowSize = ImGui.GetWindowSize();
 
-                ImGui.BeginChild("1", new System.Numerics.Vector2(windowSize.X - 250, 0));
+                ImGui.BeginChild("1", new Vector2(windowSize.X - 250, 0));
                 // options
                 ImGui.SeparatorText("Options");
                 ImGui.Checkbox("High Contrast Mode", ref HCM);
                 ImGui.Checkbox("Fahoom Mode", ref FM);
+                if(ImGui.Button("Reset App Colour"))
+                {
+                    HCM = false;
+                    col = new Vector4(1f, 1f, 1f, 1f);
+                }
                 ImGui.SeparatorText("Sizing");
                 ImGui.PushItemWidth(175);
                 ImGui.SliderInt("WindowX", ref windowxsize, 500, 1000);
