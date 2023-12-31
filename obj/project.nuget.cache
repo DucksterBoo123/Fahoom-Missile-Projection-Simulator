@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "HKrAK42+E1G20PtrAIjZzWLgi/yY7sx1w1w7nC/lea8dZLvR13iv1ANNF4jnp8vvIdOh8k1KWwy22LR3Q5EIQA==",
+  "success": true,
+  "projectFilePath": "/Users/ibrahimkhan/raylibonmac/raylibonmac.csproj",
+  "expectedPackageFiles": [
+    "/Users/ibrahimkhan/.nuget/packages/raylib-cs/5.0.0/raylib-cs.5.0.0.nupkg.sha512",
+    "/Users/ibrahimkhan/.nuget/packages/system.numerics.vectors/4.5.0/system.numerics.vectors.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
