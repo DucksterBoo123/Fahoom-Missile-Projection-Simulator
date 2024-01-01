@@ -63,7 +63,7 @@ class Program : Overlay
     {
         ImGui.Begin("Goofy Ahhh");
         ImGui.Text("hello");
-        ImGui.Checkbox("saodtesticlesingular", ref var1);
+        ImGui.Checkbox("saodtesticles", ref var1);
         if (var1 == true)
         {
             ImGui.Text("help");
