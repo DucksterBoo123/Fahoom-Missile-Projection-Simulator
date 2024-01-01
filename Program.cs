@@ -111,7 +111,7 @@ class Program : Overlay
         );
 
         //fps setting
-        SetTargetFPS(60);
+        SetTargetFPS(600);
 
 
 
