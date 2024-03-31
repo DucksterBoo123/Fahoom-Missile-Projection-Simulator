@@ -1,0 +1,74 @@
+using System.Numerics;
+using Raylib_cs;
+using static Raylib_cs.Raylib;
+using static Raylib_cs.Color;
+using static Raylib_cs.KeyboardKey;
+using static Raylib_cs.BlendMode;
+using Color = Raylib_cs.Color;
+using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
+using System.Runtime.InteropServices;
+
+namespace MrCrossDrivesAnSTypeJaguar;
+
+class RumbleAndCo
+{
+    const int GLSL_VERSION = 330;
+    public static void Main()
+    {
+
+        //----------------------------------------------INIT-------------------------------------------------
+
+        Raylib.InitWindow(600, 350, "Fahoom Projectile Motion Simulator");
+        
+        //vars
+        float screeny = GetScreenHeight() / 2;
+        float screenx = GetScreenWidth() / 2;
+
+        //Vectors
+        Vector3 camPos = new Vector3(0, 0, 50);
+        Vector3 targetPos = new Vector3(0, 0, 0);
+
+        //Shaders
+        Shader shader = LoadShader(
+            "lighting.vs",
+            "lighting.fs"
+        );
+
+        //fps setting
+        SetTargetFPS(60);
+        
+        //--------------------------------------------RENDERING----------------------------------------------
+        
+        while (!Raylib.WindowShouldClose())
+        {
+            //Camera
+            Camera3D camera = new();
+            camera.Position = camPos;
+            camera.Target = targetPos;      // Camera looking at point
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);          // Camera up vector (rotation towards target)
+            camera.FovY = 60.0f;                                // Camera field-of-view Y  
+            camera.Projection = CameraProjection.CAMERA_PERSPECTIVE;
+
+            //---------------------------------------------DRAWING-----------------------------------------------
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(WHITE);
+
+            Raylib.BeginMode3D(camera);
+
+                //Grid
+                DrawGrid(200, 1);
+
+            Raylib.EndMode3D();
+
+            Raylib.DrawText("Fahoom Projectile Motion Renderer", 20,  10, 20, Color.BLACK);
+            
+            DrawFPS(510, 10);
+        
+            Raylib.EndDrawing();
+        }
+
+        Raylib.CloseWindow();
+    }
+}

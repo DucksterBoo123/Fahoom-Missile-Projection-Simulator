@@ -1,0 +1,26 @@
+/*
+namespace MrCrossDrivesAnSTypeJaguar;
+
+class Window
+{
+    public static void Main()
+    {
+        Console.WriteLine("Pick a simulation");
+        switch(Console.ReadLine())
+        {
+            case "1":
+                Suvat.suvat();
+                break;
+            case "2":
+                Missile.missile();
+                break;
+            case "3":
+                Missile2.missile2();
+                break;
+            case "4":
+                Test.test();
+                break;
+        }
+    }
+}
+*/

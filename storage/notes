@@ -1,0 +1,58 @@
+Testing Vector Class
+---------------------------------------------
+// creating vectors
+Vector testVec = new Vector((float)(Math.Atan(1/Math.Sqrt(2))), (float)Math.Sqrt(3), (float)(Math.PI)/4, true);
+Vector testVec2 = new Vector(0, 0, 0, false);
+---------------------------------------------
+
+// testing getters and setters
+testVec2.setX(5f);
+testVec2.setY(7f);
+testVec2.setZ(9f);
+Console.WriteLine(testVec2.getX());
+Console.WriteLine(testVec2.getY());
+Console.WriteLine(testVec2.getZ());
+---------------------------------------------
+
+// testing vector debug function
+Console.WriteLine(testVec.debugLogVector());
+
+// testing unit vector function
+Vector unitTestVec = testVec.unitVector();
+Console.WriteLine(unitTestVec.debugLogVector());
+
+// testing vector magnitude function
+Console.WriteLine(unitTestVec.Magnitude());
+
+// testing vector scale function
+Console.WriteLine(testVec2.Scale(5f).debugLogVector());
+Console.WriteLine(testVec2.Scale(1/5f).debugLogVector());
+
+// testing vector addition function
+Console.WriteLine(testVec.addVector(testVec2).debugLogVector());
+
+// testing vector subtraction function
+Console.WriteLine(testVec.subVector(testVec2).debugLogVector());
+
+// testing polarcoordinate conversion function
+Console.WriteLine(testVec2.getPolarCoords().debugLogVector();)
+---------------------------------------------
+
+// testing Vector to Vector3 conversion
+Console.WriteLine(testVec2.getVector3().X);
+Console.WriteLine(testVec2.getVector3().Y);
+Console.WriteLine(testVec2.getVector3().Z);
+---------------------------------------------
+
+// testing ground collision detection
+Console.WriteLine(testVec2.hasCollidedWithGround());
+------------------------------------------------------------------------------------------
+
+Debug notes
+---------------------------------------------
+//Accidentally had userdeg instead of initialangle rad, 45 was common in both, found bug later in testing
+// incorrect vector assignment
+Vector currentVelocity = new Vector(userdeg, currentSpeed, 0, true);
+// correct vector assignment
+Vector currentVelocity = new Vector(initalAngleRad, currentSpeed, 0, true);
+---------------------------------------------

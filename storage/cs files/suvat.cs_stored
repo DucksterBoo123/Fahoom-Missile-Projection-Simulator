@@ -1,0 +1,186 @@
+using System.Numerics;
+using Raylib_cs;
+using static Raylib_cs.Raylib;
+using static Raylib_cs.Color;
+using static Raylib_cs.KeyboardKey;
+using Color = Raylib_cs.Color;
+
+namespace MrCrossDrivesAnSTypeJaguar;
+
+class Suvat
+{
+
+    const int GLSL_VERSION = 330;
+    public static void suvat()
+    {
+        float MinValue(float a, float b)
+        {  
+            if(a < b)
+            {
+                return a;
+            }
+            else
+            {
+                return b;
+            }
+        }
+
+        float MaxValue(float a, float b)
+        {  
+            if(a > b)
+            {
+                return a;
+            }  
+            else
+            {
+                return b;
+            }
+        }
+
+        //----------------------------------------------INIT-------------------------------------------------
+
+        Raylib.InitWindow(600, 350, "Fahoom Projectile Motion Simulator");
+        
+        //vars
+        float screeny = GetScreenHeight() / 2;
+        float screenx = GetScreenWidth() / 2;
+
+        float minCamX = float.PositiveInfinity;
+        float maxCamX = float.NegativeInfinity;
+        float minCamY = float.PositiveInfinity;
+        float maxCamY = float.NegativeInfinity;
+        
+        float currentSpeed = 20f;
+        float userDeg = 45;
+        float initialAngleRad = userDeg * 1/180 * (float)Math.PI;
+        float mass = 100f;
+        float earthRadius = 6371000f;
+        float earthMass = 5.972e24f;
+        float bigG = 6.67e-11f;
+        //slider for dT / "accuracy of simulation"
+        float dT = 0.01f;
+
+        float magnitudeOfFDTG = -(bigG * earthMass * mass)/(earthRadius * earthRadius);
+
+        //Vectors
+        List<Vector3> trail = new List<Vector3>();
+        Vector currentVelocity = new Vector(userDeg, currentSpeed, 0, true);
+        Vector forceDueToGravity = new Vector(0, magnitudeOfFDTG, 0);
+        Vector totalForce = forceDueToGravity;
+        Vector currentPosition = new Vector(0, 0, 0);
+        Vector currentAcceleration;
+
+        //Models
+        Model sphere = LoadModelFromMesh(GenMeshSphere(1.0f, 25, 25));
+        Model plane = LoadModelFromMesh(GenMeshPlane(50,50,20,20));
+
+        //Shaders
+        Shader shader = LoadShader("lighting.vs", "lighting.fs");
+
+        //Testing
+        //Vector testVec = new Vector((float)(Math.Atan(1/Math.Sqrt(2))), (float)Math.Sqrt(3), (float)(Math.PI)/4, true);
+        //Vector testVec2 = new Vector(0, 0, 0, false);
+        //Console.WriteLine(testVec.debugLogVector());
+        //Vector unitTestVec = testVec.unitVector();
+        //Console.WriteLine(unitTestVec.debugLogVector());
+        //Console.WriteLine(unitTestVec.Magnitude());
+
+        //Console.WriteLine(testVec.subVector(testVec2).debugLogVector());
+        //Console.WriteLine(testVec2.getVector3().X);
+        //Console.WriteLine(testVec2.getVector3().Y);
+        //Console.WriteLine(testVec2.getVector3().Z);
+
+        //fps setting
+        SetTargetFPS(60);
+        
+        //--------------------------------------------RENDERING----------------------------------------------
+        
+        while (!Raylib.WindowShouldClose())
+        {
+            //Camera
+            Camera3D camera = new();
+            
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);
+            camera.FovY = 60.0f;
+            camera.Projection = CameraProjection.CAMERA_PERSPECTIVE;
+
+            currentSpeed = currentVelocity.Magnitude();
+            magnitudeOfFDTG = -(bigG * earthMass * mass)/(earthRadius * earthRadius);
+
+            forceDueToGravity = new Vector(0, magnitudeOfFDTG, 0);
+            totalForce = forceDueToGravity;
+
+            currentAcceleration = totalForce.Scale(1/mass);
+            // v = u + at
+            currentVelocity = currentVelocity.addVector(currentAcceleration.Scale(dT));
+            // s = vt - 1/2at^2
+            currentPosition = currentPosition.addVector(currentVelocity.Scale(dT).subVector(currentAcceleration.Scale(0.5f * dT * dT)));
+            
+            //Collision
+            if(currentPosition.hasCollidedWithGround())
+            {
+                dT = 0;
+            }
+
+            minCamX = MinValue(currentPosition.getX(), minCamX);
+            minCamY = MinValue(currentPosition.getY(), minCamY);
+            maxCamX = MaxValue(currentPosition.getX(), maxCamX);
+            maxCamY = MaxValue(currentPosition.getY(), maxCamY);
+
+            float dY = maxCamY - minCamY;
+            float dX = maxCamX - minCamX;
+
+            float maxCamDistance = MaxValue(dY, dX);
+            float maxCamZDistance = maxCamDistance / (2 * (float)Math.Tan(((camera.FovY/180)*Math.PI)/2));
+            float averageCamYDistance = (maxCamY + minCamY)/2;
+            float averageCamXDistance = (maxCamX + minCamX)/2;
+            
+            //Vectors
+            Vector camPos = new Vector(averageCamXDistance, averageCamYDistance, maxCamZDistance * (float)1.1);
+            Vector targetPos = new Vector(averageCamXDistance, averageCamYDistance, 0);
+            Vector3 StartPos = new Vector3(0, 0, 0);
+
+            camera.Position = camPos.getVector3();
+            camera.Target = targetPos.getVector3();
+
+            //hide cursor
+            //DisableCursor();
+
+            //---------------------------------------------DRAWING-----------------------------------------------
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(WHITE);
+
+            Raylib.BeginMode3D(camera);
+
+                //Grid
+                //DrawGrid(200, 1);
+
+                //3D Objects
+                DrawModel(sphere, currentPosition.getVector3(), 0.5f, Color.BLUE);
+                DrawModel(plane, new Vector(0, 0, 0, false).getVector3(), 2f, Color.BLACK);
+                
+                //Lines
+                DrawLine3D(StartPos, currentPosition.getVector3(), Color.GREEN);
+                trail.Add(currentPosition.getVector3());
+                if(trail.Count > 1)
+                {
+                    for(int i = 1; i < trail.Count; i++)
+                    {
+                        Raylib.DrawLine3D(trail[i-1], trail[i], Color.RED);
+                    }
+                }
+
+            Raylib.EndMode3D();
+
+            //Raylib.DrawText("Fahoom Projectile Motion Renderer", 20,  10, 20, Color.BLACK);
+            Raylib.DrawText("Current Speed: " + currentSpeed, 20, 10, 20, Color.BLACK);
+            
+            DrawFPS(510, 10);
+        
+            Raylib.EndDrawing();
+        }
+
+        Raylib.CloseWindow();
+    }
+}

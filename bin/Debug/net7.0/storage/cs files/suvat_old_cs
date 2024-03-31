@@ -1,0 +1,188 @@
+﻿/*
+using System.Numerics;
+using Raylib_cs;
+using static Raylib_cs.Raylib;
+using static Raylib_cs.Color;
+using static Raylib_cs.KeyboardKey;
+using Color = Raylib_cs.Color;
+
+namespace MrCrossDrivesAnSTypeJaguar;
+
+class Suvat
+{
+
+    const int GLSL_VERSION = 330;
+    public static void suvat()
+    {
+
+        //----------------------------------------------INIT-------------------------------------------------
+
+        Raylib.InitWindow(600, 350, "Fahoom Projectile Motion Simulator");
+        
+        //vars
+        float screeny = GetScreenHeight() / 2;
+        float screenx = GetScreenWidth() / 2;
+
+        //Vectors
+        Vector3 camPos = new Vector3(0, 0, 50);
+        Vector3 targetPos = new Vector3(0, 0, 0);
+        List<Vector3> trail = new List<Vector3>();
+
+        //Models
+        Model sphere = LoadModelFromMesh(GenMeshSphere(1.0f, 25, 25));
+        Model plane = LoadModelFromMesh(GenMeshSphere(1.0f, 25, 25));
+
+        //Shaders
+        Shader shader = LoadShader(
+            "lighting.vs",
+            "lighting.fs"
+        );
+
+        //fps setting
+        SetTargetFPS(60);
+
+        //----------------------------------------------NOTES------------------------------------------------
+
+        // air resistance info
+        //-----------------------
+        // F(d) = -F(d)v(hat)
+        // Drag Force = -Drag Force * unit vector of velocity
+
+        // F(d) = 0.25 * p * A * v^2
+        // Drag Force = 0.25 * density of fluid (air) * crossectional area of objects * speed^2
+
+        // C(d) = F(d) / 0.5 * p * A * v^2
+        // Drag Co-Efficient = Magnitude of Drag Force / 0.5 * density of fluid (air) * crossectional area of object * speed^2 
+
+
+
+        // notes
+        //-----------------------
+        // store values in an array, add slider for playback, possible add ffmpeg support for baking video?
+        // play/pause
+        // Make frame counter that is affected by play and pause
+        
+        //--------------------------------------------RENDERING----------------------------------------------
+        
+        while (!Raylib.WindowShouldClose())
+        {
+            //Camera
+            Camera3D camera = new();
+            camera.Position = camPos;
+            camera.Target = targetPos;      // Camera looking at point
+            camera.Up = new Vector3(0.0f, 1.0f, 0.0f);          // Camera up vector (rotation towards target)
+            camera.FovY = 60.0f;                                // Camera field-of-view Y  
+            camera.Projection = CameraProjection.CAMERA_PERSPECTIVE;
+
+            //vars
+            float gravac = -9.81f;
+            float speed = 17f;
+            float vspeed;
+            float hspeed;
+            float degVerAngle = 45f; //angle to the vertical, e.g. straight up is 0, horizontal is 90
+            float radVerAngle = degVerAngle * 1/180 * (float)Math.PI;
+            float degHorAngle = 90f; //angle to the horizontal
+            float radHorAngle = degHorAngle * 1/180 * (float)Math.PI;
+            float t = 0;
+            double posY;
+            double posXZ;
+            double deltaTime = GetTime();
+            deltaTime = deltaTime - t;
+            
+            //calc
+            //s = ut + 1/2(a(t^2))
+            vspeed = speed * (float)Math.Cos(radVerAngle);
+            hspeed = speed * (float)Math.Sin(radVerAngle);
+
+            posY = vspeed * deltaTime + 0.5 * gravac * deltaTime * deltaTime;
+            posXZ = deltaTime * hspeed;
+
+            //positioning
+            float vecX = (float)(posXZ * Math.Sin(radHorAngle));
+            float vecY = (float)posY;
+            float vecZ = (float)(posXZ * Math.Cos(radHorAngle));
+            
+            //Vectors
+            Vector3 StartPos = new Vector3(0, 0, 0);
+            Vector3 CurrentPos = new Vector3(vecX, vecY, vecZ);
+            Vector3 vecsphere = new Vector3(vecX, vecY, vecZ);
+            Vector3 displacementvec = CurrentPos - StartPos;
+            Vector2 k = GetWorldToScreen(CurrentPos, camera);
+
+            //calc
+            float displacement = (float)Math.Sqrt(displacementvec.Y * displacementvec.Y + displacementvec.Z * displacementvec.Z);
+
+            //Camera Controls
+            switch(GetKeyPressed())
+            {
+                case 49:
+                    camPos = new Vector3(0, 0, 50);
+                    targetPos = new Vector3(0, 0, 0);
+                    break;
+                case 50:
+                    camPos = new Vector3(0, 0, 100);
+                    targetPos = new Vector3(0, 0, 0);
+                    break;
+                case 51:
+                    camPos = new Vector3(0, 0, 150);
+                    targetPos = new Vector3(0, 0, 0);
+                    break;
+                case 52:
+                    camPos = new Vector3(0, 0, 200);
+                    targetPos = new Vector3(0, 0, 0);
+                    break;
+            }
+            
+            if(IsKeyDown(KEY_F))
+            {
+                camPos = new Vector3(vecX + 15, vecY, vecZ + 15);
+                targetPos = CurrentPos;
+            }
+
+            //hide cursor
+            //DisableCursor();
+
+            //---------------------------------------------DRAWING-----------------------------------------------
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(WHITE);
+            
+            //2D Objects
+            DrawCircle((int)screenx, (int)screeny, 2.5f, Color.GREEN);
+
+            Raylib.BeginMode3D(camera);
+
+                //Grid
+                DrawGrid(200, 1);
+
+                //3D Objects
+                DrawModel(sphere, vecsphere, 1.0f, Color.BLUE);
+                
+                //Lines
+                DrawLine3D(StartPos, CurrentPos, Color.GREEN);
+                trail.Add(CurrentPos);
+                if(trail.Count > 1)
+                {
+                    for(int i = 1; i < trail.Count; i++)
+                    {
+                        Raylib.DrawLine3D(trail[i-1], trail[i], Color.RED);
+                    }
+                }
+
+            Raylib.EndMode3D();
+
+            //Raylib.DrawText("Fahoom Projectile Motion Renderer", 20,  10, 20, Color.BLACK);
+            Raylib.DrawText(k.ToString(), 20,  10, 20, Color.BLACK);
+            Raylib.DrawText("X Vector: " + vecX.ToString(), 20, 40, 20, Color.BLACK);
+            Raylib.DrawText("Y Vector: " + vecY.ToString(), 20, 70, 20, Color.BLACK);
+            Raylib.DrawText("Displacement: " + displacement, 20, 100, 20, Color.BLACK);
+            
+            DrawFPS(510, 10);
+        
+            Raylib.EndDrawing();
+        }
+
+        Raylib.CloseWindow();
+    }
+}
+*/

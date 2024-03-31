@@ -1,0 +1,32 @@
+using Raylib_cs;
+using static Raylib_cs.Raylib;
+
+namespace MrCrossDrivesAnSTypeJaguar;
+
+public class bck
+{
+    public static int bcktest()
+    {
+        // Initialization
+        //--------------------------------------------------------------------------------------
+        const int screenWidth = 800;
+        const int screenHeight = 450;
+
+        InitWindow(screenWidth, screenHeight, "raylib [text] example - input box");
+        SetTargetFPS(60);
+
+        Rectangle backgroundSource = new Rectangle(0, 0, 2360, 1640);
+        Rectangle backgroundDestination = new Rectangle(0, 0, 800, 450);
+
+        while (!WindowShouldClose())
+        {
+            BeginDrawing();
+            Texture2D background = LoadTexture("storage/images/background.png");
+            DrawTexturePro(background, backgroundSource, backgroundDestination, new System.Numerics.Vector2(0,0), 0, Color.WHITE);
+            ClearBackground(Color.RAYWHITE);
+            EndDrawing();
+        }
+        CloseWindow();
+        return 0;
+    }
+}
